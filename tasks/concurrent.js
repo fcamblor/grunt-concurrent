@@ -67,7 +67,7 @@ module.exports = function (grunt) {
 					} else {
 						color = null;
 					}
-					if(color && !chalk[color]) {
+					if(color && color !== 'hidden' && !chalk[color]) {
 						grunt.log.error("No chalk color found corresponding to ["+color+"] => falling back to uncolored task ["+task+"]");
 						color = null;
 					}
@@ -79,8 +79,10 @@ module.exports = function (grunt) {
 					padString = '    ';
 				}
 
-				cp.stdout.pipe(padStream(padString, 1)).pipe(process.stdout);
-				cp.stderr.pipe(padStream(padString, 1)).pipe(process.stderr);
+				if(color !== 'hidden') {
+					cp.stdout.pipe(padStream(padString, 1)).pipe(process.stdout);
+					cp.stderr.pipe(padStream(padString, 1)).pipe(process.stderr);
+				}
 			}
 
 			cpCache.push(cp);
